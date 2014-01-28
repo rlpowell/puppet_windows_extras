@@ -23,7 +23,7 @@ end
 
 def do_verb(verb)
 	fileobj = get_file_obj
-	fileobj.Verbs.each { |x| y = x.name.gsub('&','').chomp ; puts "--" + y + "--" ; (y == verb) and x.DoIt }
+	fileobj.Verbs.each { |x| y = x.name.gsub('&','').chomp ; (y == verb) and x.DoIt }
 end
 
 Puppet::Type.type(:windows_pin_taskbar).provide(:windows_pin_taskbar) do
