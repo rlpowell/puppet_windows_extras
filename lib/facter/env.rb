@@ -3,7 +3,8 @@
 #Facter.loadfacts()
 #if Facter['osfamily'].value == 'windows'
 	ENV.each do |k,v|
-		Facter.add("env_#{k.downcase}".to_sym) do
+                k = k.chomp.downcase.gsub(%r{[^a-zA-Z0-9_-]}, '')
+                Facter.add("env_#{k}".to_sym) do
 			setcode do
 				v
 			end
