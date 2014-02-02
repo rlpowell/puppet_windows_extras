@@ -36,6 +36,17 @@
 # Copyright 2014 Your name here, unless otherwise noted.
 #
 class windows_extras {
+  exec { 'reload explorer':
+    refreshonly => true,
+    command => "$cmd /c powershell -Command Stop-Process -processname explorer",
+  }
 
+  define regload( $file = $title ) {
+    $file_quoted = regsubst("\"$file\"", '/', '\\', 'G')
 
+    exec { "regload $file":
+      command => "$cmd /c regedit /s $file_quoted",
+      notify => Exec['reload explorer'],
+    }
+  }
 }
