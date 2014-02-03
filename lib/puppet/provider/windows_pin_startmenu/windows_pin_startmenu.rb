@@ -47,7 +47,6 @@ Puppet::Type.type(:windows_pin_startmenu).provide(:windows_pin_startmenu) do
 
 		names.include? 'Pin to Start Menu' and return false
 		names.include? 'Unpin from Start Menu' and return true
-		raise "Can't determine #{@resource[:where]} pin status of #{@resource[:path]} in windows_pin_startmenu"
-		raise "Bad value for where in windows_pin_startmenu"
+		raise "Can't determine start menu pin status of #{@resource[:path]} in windows_pin_startmenu"
 	end
 end

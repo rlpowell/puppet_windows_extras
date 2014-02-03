@@ -47,6 +47,6 @@ Puppet::Type.type(:windows_pin_taskbar).provide(:windows_pin_taskbar) do
 
 		names.include? 'Pin to Taskbar' and return false
 		names.include? 'Unpin from Taskbar' and return true
-		raise "Can't determine #{@resource[:where]} pin status of #{@resource[:path]} in windows_pin_taskbar"
+		raise "Can't determine taskbar pin status of #{@resource[:path]} in windows_pin_taskbar"
 	end
 end
