@@ -41,12 +41,13 @@ class windows_extras {
     command => "$cmd /c powershell -Command Stop-Process -processname explorer",
   }
 
-  define regload( $file = $title ) {
+  define regload( $file = $title, $unless = undef ) {
     $file_quoted = regsubst("\"$file\"", '/', '\\', 'G')
 
     exec { "regload $file":
       command => "$cmd /c regedit /s $file_quoted",
       notify => Exec['reload explorer'],
+      unless => $unless,
     }
   }
 }
