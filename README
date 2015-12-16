@@ -18,6 +18,8 @@
 
 A collection of generic utility bits for Puppet 3 on the Windows platform, specifically Windows 7 but should work on others of about that vintage.  Untested on much earlier or later OSes, in particular Windows XP and Windows 8, but I'll happily take pull requests.
 
+Now also has Windows 10 support.
+
 ##Module Description
 
 If applicable, this section should have a brief description of the technology the module integrates with and what that integration enables. This section should answer the questions: "What does this module *do*?" and "Why would I use it?"
