@@ -102,6 +102,9 @@ Puppet::Type.newtype(:windows_pin) do
 
       # info("pinning")
       if Facter.value(:operatingsystemmajrelease).to_i == 10
+        if ! File.exists?($syspin)
+          raise "On Windows 10, windows_pin requires syspin.exe, from http://www.technosys.net/products/utils/pintotaskbar , in #{$syspin}"
+        end
         cmd = "#{$syspin} \"#{fix_path resource[:name]}\" #{cmdval}"
         notice("cmd: #{cmd}")
         notice("output: " + %x{#{cmd}})
@@ -120,6 +123,9 @@ Puppet::Type.newtype(:windows_pin) do
 
       # info("unpinning")
       if Facter.value(:operatingsystemmajrelease).to_i == 10
+        if ! File.exists?($syspin)
+          raise "On Windows 10, windows_pin requires syspin.exe, from http://www.technosys.net/products/utils/pintotaskbar , in #{$syspin}"
+        end
         cmd = "#{$syspin} \"#{fix_path resource[:name]}\" #{cmdval}"
         notice("cmd: #{cmd}")
         notice("output: " + %x{#{cmd}})
