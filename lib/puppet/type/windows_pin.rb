@@ -22,20 +22,21 @@ def get_file_obj( name )
   return fileobj
 end
 
-def do_verb(name, verb)
-  fileobj = get_file_obj( name )
-  fileobj.Verbs.each do |x|
-    y = x.name.gsub('&','').chomp
-    # info("y: #{y}")
-    if y =~ verb or y == verb
-      # info("match found")
-      return x.DoIt
-    end
-
-    # If we're still here, no match was found
-    raise "Could not find verb \"#{verb}\" on item #{name}"
-  end
-end
+# No longer actually used.
+# def do_verb(name, verb)
+#   fileobj = get_file_obj( name )
+#   fileobj.Verbs.each do |x|
+#     y = x.name.gsub('&','').chomp
+#     # info("y: #{y}")
+#     if y =~ verb or y == verb
+#       # info("match found")
+#       return x.DoIt
+#     end
+# 
+#     # If we're still here, no match was found
+#     raise "Could not find verb \"#{verb}\" on item #{name}"
+#   end
+# end
 
 $syspin=%q{C:\Windows\System32\syspin.exe}
 
@@ -63,7 +64,7 @@ Puppet::Type.newtype(:windows_pin) do
     def retrieve
       typere="[tT]askbar"
       if resource[:type] =~ %r{start}i
-        typere="[sS]tart"
+        typere="[sS]tart ([Mm]enu)?"
       end
 
       fileobj = get_file_obj( resource[:name] )
@@ -97,20 +98,20 @@ Puppet::Type.newtype(:windows_pin) do
       cmdval="c:5386"
       if resource[:type] =~ %r{start}i
         typere="[sS]tart"
-        cmdval="c:51201"
+        if Facter.value(:operatingsystemmajrelease).to_i == 10
+          cmdval="c:51201"
+        else
+          cmdval="c:5381"
+        end
       end
 
       # info("pinning")
-      if Facter.value(:operatingsystemmajrelease).to_i == 10
-        if ! File.exists?($syspin)
-          raise "On Windows 10, windows_pin requires syspin.exe, from http://www.technosys.net/products/utils/pintotaskbar , in #{$syspin}"
-        end
-        cmd = "#{$syspin} \"#{fix_path resource[:name]}\" #{cmdval}"
-        notice("cmd: #{cmd}")
-        notice("output: " + %x{#{cmd}})
-      else
-        do_verb( resource[:name], %r{Pin to #{typere}} )
-      end
+       if ! File.exists?($syspin)
+         raise "windows_pin requires syspin.exe, from http://www.technosys.net/products/utils/pintotaskbar , in #{$syspin}"
+       end
+       cmd = "#{$syspin} \"#{fix_path resource[:name]}\" #{cmdval}"
+       notice("cmd: #{cmd}")
+       notice("output: " + %x{#{cmd}})
     end
 
     newvalue :absent do
@@ -118,20 +119,20 @@ Puppet::Type.newtype(:windows_pin) do
       cmdval="c:5387"
       if resource[:type] =~ %r{start}i
         typere="[sS]tart"
-        cmdval="c:51394"
+        if Facter.value(:operatingsystemmajrelease).to_i == 10
+          cmdval="c:51394"
+        else
+          cmdval="c:5382"
+        end
       end
 
       # info("unpinning")
-      if Facter.value(:operatingsystemmajrelease).to_i == 10
-        if ! File.exists?($syspin)
-          raise "On Windows 10, windows_pin requires syspin.exe, from http://www.technosys.net/products/utils/pintotaskbar , in #{$syspin}"
-        end
-        cmd = "#{$syspin} \"#{fix_path resource[:name]}\" #{cmdval}"
-        notice("cmd: #{cmd}")
-        notice("output: " + %x{#{cmd}})
-      else
-        do_verb( resource[:name], %r{Unpin (from)? #{typere}} )
-      end
+       if ! File.exists?($syspin)
+         raise "windows_pin requires syspin.exe, from http://www.technosys.net/products/utils/pintotaskbar , in #{$syspin}"
+       end
+       cmd = "#{$syspin} \"#{fix_path resource[:name]}\" #{cmdval}"
+       notice("cmd: #{cmd}")
+       notice("output: " + %x{#{cmd}})
     end
   end
 end
