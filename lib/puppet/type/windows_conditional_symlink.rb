@@ -45,7 +45,7 @@ Puppet::Type.newtype(:windows_conditional_symlink) do
         end
 
         if File.exists?( @resource[:name] ) && ! Puppet::FileSystem.symlink?( @resource[:name] )
-          File.rename( @resource[:name], "#{@resource[:name]}-WIBBLE" )
+          File.rename( @resource[:name], "#{@resource[:name]}-OLD" )
           Puppet.info "windows_conditional_symlink found a bad file; renamed #{@resource[:name]} to #{@resource[:name]}-OLD"
         end
 
