@@ -64,7 +64,7 @@ Puppet::Type.newtype(:windows_pin) do
     def retrieve
       typere="[tT]askbar"
       if resource[:type] =~ %r{start}i
-        typere="[sS]tart ([Mm]enu)?"
+        typere="[sS]tart( [Mm]enu)?"
       end
 
       fileobj = get_file_obj( resource[:name] )
@@ -72,6 +72,14 @@ Puppet::Type.newtype(:windows_pin) do
       fileobj.Verbs.each { |x| y = x.name.gsub('&','').chomp ; names << y }
 
       # info("verb names: #{names.join("\n")}")
+
+      # It might be faster to check these directories, but they
+      # don't seem to have most of our stuff so I didn't bother
+      # figuring it out.
+      #
+      # info("dir1: #{Dir.entries("C:\\Users\\rlpowell\\AppData\\Roaming\\Microsoft\\Internet Explorer\\Quick Launch\\User Pinned\\TaskBar")}")
+      # info("dir2: #{Dir.entries("/Users/rlpowell/AppData/Roaming/Microsoft/Internet Explorer/Quick Launch/User Pinned/TaskBar")}")
+      # info("us: #{resource[:name]}")
 
       if Facter.value(:operatingsystemmajrelease).to_i == 10
         if names.grep( %r{^\s*Unpin (from)? #{typere}\s*$} ).length > 0
