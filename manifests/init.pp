@@ -56,4 +56,26 @@ class windows_extras {
       unless => $unless,
     }
   }
+
+  # Force this to occur before all package installation, because chocolatey package installation takes forever and when testing it's super annoying to wait that long.
+  define windows_conditional_symlink_early( $target, $onlyifexists=undef ) {
+    windows_conditional_symlink { $name:
+      target       => $target,
+      onlyifexists => $onlyifexists
+    }
+
+    # Make it come early as promised
+    Windows_extras::Windows_conditional_symlink_early[$name] -> Package <| |>
+  }
+
+  # Force this to occur before all package installation, because chocolatey package installation takes forever and when testing it's super annoying to wait that long.
+  define windows_symlink_early( $target, $mode=undef ) {
+    file { $name:
+      target       => $target,
+      mode         => $mode,
+    }
+
+    # Make it come early as promised
+    File[$name] -> Package <| |>
+  }
 }
