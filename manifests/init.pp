@@ -45,7 +45,7 @@ class windows_extras {
     $file_quoted = regsubst("\"$file\"", '/', '\\', 'G')
 
     if $unless_key {
-      $unless="$cmd /c reg query \"$unless_key\" | findstr /L \"$unless_check\""
+      $unless="$cmd /c reg query \"$unless_key\" | findstr /C:\"$unless_check\""
     } else {
       $unless=undef
     }
