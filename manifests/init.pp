@@ -41,10 +41,12 @@ class windows_extras {
     command => "$cmd /c powershell -Command Stop-Process -processname explorer",
   }
 
-  define regload( $file = $title, $unless_key = undef, $unless_check= undef ) {
+  define regload( $file = $title, $unless_key = undef, $unless_value = undef, $unless_check = undef ) {
     $file_quoted = regsubst("\"$file\"", '/', '\\', 'G')
 
-    if $unless_key {
+    if $unless_key and $unless_value {
+      $unless="$cmd /c reg query \"$unless_key\" /v \"$unless_value\" | findstr /C:\"$unless_check\""
+    } elsif $unless_key {
       $unless="$cmd /c reg query \"$unless_key\" | findstr /C:\"$unless_check\""
     } else {
       $unless=undef
